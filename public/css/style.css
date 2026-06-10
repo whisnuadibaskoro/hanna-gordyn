@@ -1,0 +1,1298 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;500;600;700&display=swap');
+
+/* ========================================
+   CSS VARIABLES - Color Palette
+   ======================================== */
+:root {
+  --color-maroon-dark: #4A2511;
+  --color-maroon-medium: #A0522D;
+  --color-maroon-light: #6B3E2E;
+  --color-gold: #D4A574;
+  --color-cream: #F5E6D3;
+  --color-text-primary: #ffffff;
+  --color-text-secondary: rgba(255, 255, 255, 0.8);
+  --color-border: rgba(212, 165, 116, 0.3);
+  --color-shadow: rgba(160, 82, 45, 0.3);
+  --blur-glass: 20px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg, rgba(74, 37, 17, 0.8) 0%, rgba(107, 62, 46, 0.8) 50%, rgba(61, 28, 15, 0.8) 100%),
+              url('/images/bggorden.jpg');
+  background-attachment: fixed;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffffff;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(160, 82, 45, 0.15) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 50%, rgba(212, 165, 116, 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ========================================
+   GLASS MORPHISM UTILITIES
+   Reusable utility classes for glass effect components
+   ======================================== */
+.glass {
+  background: rgba(255, 255, 255, 0.08);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+}
+
+.glass-dark {
+  background: rgba(15, 18, 40, 0.5);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
+
+/* ========================================
+   BROWSER FALLBACK
+   Fallback styles for browsers without backdrop-filter support
+   ======================================== */
+@supports not (backdrop-filter: blur(20px)) {
+  .glass,
+  .glass-dark,
+  header,
+  .box,
+  .card,
+  .garansi input,
+  .garansi button,
+  .login-box,
+  .form-container,
+  footer {
+    background: rgba(15, 18, 40, 0.8);
+  }
+}
+
+/* ========================================
+   HEADER & NAVIGATION
+   Top navigation bar with logo and menu links
+   ======================================== */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(74, 37, 17, 0.5);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(0px);
+  border-bottom: 2px solid rgba(212, 165, 116, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  will-change: transform;
+}
+
+.logo {
+  font-size: 30px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  font-style: italic;
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 500;
+  font-size: 19px;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 8px 0;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  transition: width 0.3s ease;
+}
+
+nav a:hover {
+  color: #D4A574;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+nav a:active {
+  transform: scale(0.95);
+}
+
+/* ========================================
+   HERO SECTION
+   Large banner section with headline and CTA button
+   ======================================== */
+.hero {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 30px;
+  position: relative;
+  z-index: 1;
+  min-height: 600px;
+}
+
+.hero-content {
+  max-width: 800px;
+  animation: slideUp 0.8s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero h1 {
+  font-size: clamp(32px, 8vw, 80px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574 0%, #F5E6D3 50%, #A0522D 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 20px;
+  line-height: 1.1;
+  word-wrap: break-word;
+}
+
+.hero p {
+  font-size: clamp(16px, 4vw, 18px);
+  color: rgba(255, 255, 255, 0.8);
+  margin: 15px 0;
+  line-height: 1.6;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 16px 40px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  color: #ffffff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  border: 2px solid #D4A574;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.4);
+  -webkit-user-select: none;
+  user-select: none;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.btn:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(160, 82, 45, 0.5);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+.btn:active {
+  transform: translateY(-2px);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .btn:active {
+    background: linear-gradient(135deg, #A0522D, #D4A574);
+    opacity: 0.8;
+  }
+}
+
+/* ========================================
+   ABOUT SECTION
+   Company information and description content
+   ======================================== */
+.about {
+  max-width: 900px;
+  margin: auto;
+  padding: 100px 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.about h2 {
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 700;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.about p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+/* ========================================
+   KEUNGGULAN SECTION
+   Features/benefits showcase with cards
+   ======================================== */
+.keunggulan {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 60px 40px;
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.box {
+  padding: 40px 30px;
+  text-align: center;
+  transition: all 0.4s ease;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 20px;
+  will-change: transform;
+}
+
+.box:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-12px);
+  border-color: rgba(212, 165, 116, 0.4);
+  box-shadow: 0 20px 40px rgba(160, 82, 45, 0.25);
+}
+
+.box h3 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.box p {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.6;
+}
+
+/* Katalog */
+.judul {
+  text-align: center;
+  margin-top: 60px;
+  margin-bottom: 40px;
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  z-index: 1;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.card {
+  padding: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  background: rgba(255, 255, 255, 0.05);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 20px;
+  will-change: transform;
+}
+
+.card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-12px);
+  border-color: rgba(212, 165, 116, 0.4);
+  box-shadow: 0 20px 40px rgba(160, 82, 45, 0.25);
+}
+
+.card img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 20px;
+  display: block;
+}
+
+.card h2 {
+  padding: 20px 20px 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.card p {
+  padding: 0 20px 20px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* ========================================
+   WARRANTY/GARANSI SECTION
+   Warranty lookup form with input fields and search button
+   ======================================== */
+.garansi {
+  padding: 100px 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.garansi h1 {
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 700;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.garansi input {
+  padding: 16px 20px;
+  width: min(100%, 350px);
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+}
+
+.garansi input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.garansi input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 165, 116, 0.6);
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.3);
+}
+
+.garansi button {
+  padding: 16px 40px;
+  margin-left: 10px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  color: white;
+  border: 2px solid #D4A574;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.4);
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.garansi button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(160, 82, 45, 0.5);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+.garansi button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(59, 130, 246, 0.4);
+}
+
+.garansi h3 {
+  margin-top: 40px;
+  color: #ff6b6b;
+  font-size: 16px;
+}
+
+.hasil {
+  margin: 50px auto;
+  max-width: 500px;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+}
+
+.hasil p {
+  margin-top: 15px;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* ========================================
+   CONTACT SECTION
+   Contact information with links and social media cards
+   ======================================== */
+.kontak {
+  padding: 100px 40px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+.kontak h1 {
+  font-size: clamp(32px, 6vw, 44px);
+  font-weight: 700;
+  margin-bottom: 50px;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.contact-card {
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  margin: 20px auto;
+  padding: 40px;
+  max-width: 400px;
+  border-radius: 20px;
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  transition: all 0.4s ease;
+  will-change: transform;
+}
+
+.contact-card:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-8px);
+  border-color: rgba(212, 165, 116, 0.4);
+  box-shadow: 0 20px 40px rgba(160, 82, 45, 0.25);
+}
+
+.contact-card h2 {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+.contact-card a {
+  display: inline-block;
+  color: #ffffff;
+  text-decoration: none;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.4);
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-appearance: none;
+  appearance: none;
+  border: 2px solid #D4A574;
+}
+
+.contact-card a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(160, 82, 45, 0.5);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+/* ========================================
+   FOOTER
+   Page footer with company info and copyright
+   ======================================== */
+footer {
+  background: rgba(74, 37, 17, 0.4);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(2px);
+  border-top: 2px solid rgba(212, 165, 116, 0.3);
+  padding: 20px 40px;
+  text-align: center;
+  margin-top: 100px;
+  position: relative;
+  z-index: 1;
+}
+
+footer h2 {
+  font-size: 24px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+}
+
+footer p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+/* ========================================
+   ADMIN DASHBOARD
+   Admin panel styles including table and management controls
+   ======================================== */
+.admin {
+  padding: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.admin h1 {
+  font-size: clamp(28px, 6vw, 36px);
+  font-weight: 700;
+  margin-bottom: 30px;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.nav-links {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-links a {
+  display: inline-flex;
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  color: white;
+  text-decoration: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s ease;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #D4A574;
+  box-shadow: 0 6px 20px rgba(160, 82, 45, 0.3);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.nav-links a:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 28px rgba(160, 82, 45, 0.4);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+.admin table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.04);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(212, 165, 116, 0.2);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.admin thead {
+  background: linear-gradient(135deg, rgba(160, 82, 45, 0.3), rgba(212, 165, 116, 0.2));
+  border-bottom: 2px solid rgba(212, 165, 116, 0.3);
+}
+
+.admin th {
+  color: #D4A574;
+  padding: 18px 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.admin td {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(212, 165, 116, 0.1);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 14px;
+  text-align: center;
+}
+
+.admin tbody tr {
+  transition: all 0.3s ease;
+}
+
+.admin tbody tr:hover {
+  background: rgba(212, 165, 116, 0.1);
+}
+
+.admin tbody tr:hover td {
+  color: #D4A574;
+}
+
+.admin a {
+  color: #D4A574;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 12px;
+  border-radius: 6px;
+}
+
+.admin a:hover {
+  color: #A0522D;
+  background: rgba(212, 165, 116, 0.2);
+}
+
+/* ========================================
+   LOGIN FORM
+   Admin authentication page styling
+   ======================================== */
+.login-box {
+  width: min(90%, 420px);
+  margin: 120px auto;
+  padding: 50px;
+  background: rgba(74, 37, 17, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 20px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.login-box h1 {
+  margin-bottom: 30px;
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.login-box input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-top: 15px;
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+}
+
+.login-box input::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.login-box input:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 165, 116, 0.6);
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.3);
+}
+
+.login-box button {
+  width: 100%;
+  margin-top: 25px;
+  padding: 14px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  border: 2px solid #D4A574;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.4);
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.login-box button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(160, 82, 45, 0.5);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+.login-box button:active {
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   FORM CONTAINER
+   General form styling for input pages (add/edit warranty)
+   ======================================== */
+.form-container {
+  width: min(90%, 520px);
+  margin: 60px auto;
+  padding: 50px;
+  background: rgba(74, 37, 17, 0.3);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 20px;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.form-container h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: clamp(24px, 6vw, 28px);
+  font-weight: 700;
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.form-container label {
+  display: block;
+  margin-top: 15px;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #D4A574;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-container input,
+.form-container select {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 2px solid rgba(212, 165, 116, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  color: #ffffff;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+}
+
+.form-container input::placeholder,
+.form-container select::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.form-container input:focus,
+.form-container select:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(212, 165, 116, 0.6);
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.3);
+}
+
+.form-container button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #A0522D, #D4A574);
+  color: white;
+  border: 2px solid #D4A574;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 24px rgba(160, 82, 45, 0.4);
+  margin-top: 10px;
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.form-container button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(160, 82, 45, 0.5);
+  background: linear-gradient(135deg, #D4A574, #A0522D);
+}
+
+.form-container button:active {
+  transform: translateY(-2px);
+}
+
+/* ========================================
+   LOADING ANIMATION
+   Spinner overlay that displays during page transitions
+   ======================================== */
+.loading {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+.loading.show {
+  display: flex;
+  opacity: 1;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.2);
+  border-top: 4px solid #D4A574;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ========================================
+   CONTENT WRAPPER
+   Main content animation and layout
+   ======================================== */
+#content {
+  animation: fadeIn 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   Media queries for different screen sizes (tablets, phones)
+   ======================================== */
+@media (max-width: 1024px) {
+  header {
+    padding: 15px 30px;
+  }
+
+  nav {
+    gap: 20px;
+  }
+
+  .container,
+  .keunggulan {
+    padding: 30px;
+  }
+}
+
+@media (max-width: 768px) {
+  * {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  header {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  nav {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  nav a {
+    padding: 10px;
+    min-height: 48px;
+  }
+
+  .hero {
+    height: auto;
+    min-height: 500px;
+    padding: 40px 20px;
+  }
+
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  .hero p {
+    font-size: 16px;
+  }
+
+  .hero-content {
+    animation: slideUp 0.8s ease-out;
+  }
+
+  .about {
+    padding: 60px 20px;
+  }
+
+  .garansi {
+    padding: 60px 20px;
+  }
+
+  .garansi input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .garansi button {
+    margin: 10px auto 0;
+    width: 100%;
+    display: block;
+  }
+
+  .kontak {
+    padding: 60px 20px;
+  }
+
+  .login-box,
+  .form-container {
+    width: calc(100% - 40px);
+    margin: 60px 20px;
+    padding: 30px 20px;
+  }
+
+  .login-box h1,
+  .form-container h1 {
+    font-size: 24px;
+  }
+
+  .keunggulan,
+  .container {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .keunggulan {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .card img {
+    height: 200px;
+  }
+
+  footer {
+    padding: 30px 20px;
+  }
+
+  .admin {
+    padding: 20px;
+  }
+
+  .admin table {
+    font-size: 12px;
+  }
+
+  .admin th,
+  .admin td {
+    padding: 10px;
+  }
+
+  .nav-links {
+    gap: 10px;
+  }
+
+  .nav-links a {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  header {
+    padding: 12px 15px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  nav {
+    gap: 8px;
+  }
+
+  nav a {
+    font-size: 12px;
+    padding: 6px;
+    min-height: 48px;
+  }
+
+  .hero {
+    min-height: 400px;
+    padding: 30px 15px;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .btn {
+    padding: 12px 24px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+
+  .about {
+    padding: 40px 15px;
+  }
+
+  .garansi {
+    padding: 40px 15px;
+  }
+
+  .kontak {
+    padding: 40px 15px;
+  }
+
+  .contact-card {
+    max-width: 100%;
+    padding: 25px 15px;
+  }
+
+  .login-box,
+  .form-container {
+    width: calc(100% - 30px);
+    margin: 40px 15px;
+    padding: 25px 15px;
+  }
+
+  .form-container label {
+    font-size: 12px;
+  }
+
+  .form-container input,
+  .form-container select {
+    font-size: 16px;
+    padding: 12px 12px;
+  }
+
+  .admin table {
+    font-size: 11px;
+  }
+
+  .admin th,
+  .admin td {
+    padding: 8px 5px;
+  }
+
+  footer {
+    padding: 20px 15px;
+  }
+
+  footer h2 {
+    font-size: 20px;
+  }
+
+  footer p {
+    font-size: 12px;
+  }
+}
+
+/* ========================================
+   BROWSER-SPECIFIC FIXES
+   Safari compatibility and webkit-specific properties
+   ======================================== */
+@supports (-webkit-touch-callout: none) {
+  body {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  input,
+  select,
+  button,
+  a {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  header,
+  .box,
+  .card,
+  .login-box,
+  .form-container {
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+  }
+}
+
+/* ========================================
+   CHROME OPTIMIZATION
+   Chrome-specific performance and rendering improvements
+   ======================================== */
+@supports (backdrop-filter: blur(20px)) {
+  header,
+  .box,
+  .card,
+  .login-box,
+  .form-container,
+  footer {
+    backdrop-filter: blur(20px);
+  }
+}
+
+/* ========================================
+   FIREFOX FIXES
+   Firefox-specific CSS for gradient text and UI elements
+   ======================================== */
+@-moz-document url-prefix() {
+  .hero h1,
+  .about h2,
+  .judul,
+  .garansi h1,
+  .kontak h1,
+  .logo {
+    background: linear-gradient(135deg, #D4A574, #A0522D);
+    color: transparent;
+  }
+
+  input,
+  select {
+    -moz-appearance: none;
+    appearance: none;
+  }
+
+  input::-moz-placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+/* ======================================== END CSS ======================================== */

@@ -1,0 +1,25 @@
+<%- include("partials/header") %>
+
+<section class="garansi">
+  <h1>CEK GARANSI</h1>
+  <form action="/garansi" method="POST">
+    <input type="text" name="receipt_number" placeholder="Masukkan Nomor Resi" required>
+    <button>CEK</button>
+  </form>
+
+  <% if(data){ %>
+    <div class="hasil">
+      <h2>Data Garansi</h2>
+      <p>Nama: <%= data.buyer_name %></p>
+      <p>Tipe: <%= data.warranty_type %></p>
+      <p>Tanggal Pembelian: <%= data.purchase_date %></p>
+      <p>Berlaku Sampai: <%= data.warranty_end %></p>
+    </div>
+  <% } %>
+
+  <% if(error){ %>
+    <h3><%= error %></h3>
+  <% } %>
+</section>
+
+<%- include("partials/footer") %>

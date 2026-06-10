@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=5.0, user-scalable=yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Hanna Gordyn">
+  <meta name="theme-color" content="#0a0e27">
+  <meta name="description" content="Hanna Gordyn - Elegant Interior Solution untuk gordyn, blinds, vitrase premium">
+  <meta name="keywords" content="gordyn, blinds, vitrase, interior, garansi">
+  <meta property="og:title" content="Hanna Gordyn">
+  <meta property="og:description" content="Elegant Interior Solution">
+  <title>Hanna Gordyn</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪟</text></svg>">
+</head>
+<body>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+  </div>
+
+  <header>
+    <div class="logo">HANNA GORDYN</div>
+    <nav id="navbar">
+      <a href="/" class="nav-link">Beranda</a>
+      <a href="/katalog" class="nav-link">Katalog</a>
+      <a href="/garansi" class="nav-link">Cek Garansi</a>
+      <a href="/kontak" class="nav-link">Kontak</a>
+    </nav>
+  </header>
+
+  <div id="content">
+    <script>
+      // Navbar without reload - optimized for mobile
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    e.preventDefault();
+    const url = this.getAttribute('href');
+    
+    // Check if it's admin page
+    if(url.includes('/admin')) {
+      window.location.href = url;
+      return;
+    }
+    
+    // Show loading
+    document.getElementById('loading').classList.add('show');
+    
+    fetch(url, {
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => response.text())
+    .then(html => {
+      // Extract content from response
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const newContent = doc.querySelector('#content').innerHTML;
+      
+      document.querySelector('#content').innerHTML = newContent;
+      window.history.pushState({}, '', url);
+      document.getElementById('loading').classList.remove('show');
+      
+      // Scroll to top on mobile
+      if(window.innerWidth < 768) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      window.location.href = url;
+    });
+  });
+});
+
+// Prevent pinch zoom on mobile
+document.addEventListener('touchmove', function(e) {
+  if(e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+// Handle orientation change
+window.addEventListener('orientationchange', function() {
+  document.documentElement.style.height = '100vh';
+  setTimeout(() => {
+    document.documentElement.style.height = 'auto';
+  }, 100);
+});
+</script>
