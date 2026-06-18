@@ -3,7 +3,7 @@ console.log("AI ROUTES LOADED");
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { GoogleGenerativeAI } = require("../services/gemini");
+const ai = require("../services/gemini.js");
 
 // ========================
 // MULTER
