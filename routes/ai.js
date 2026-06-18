@@ -23,6 +23,9 @@ const storage = multer.diskStorage({
     }
 
 });
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY
+});
 
 const upload = multer({
     storage
