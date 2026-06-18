@@ -1,10 +1,13 @@
 // services/gemini.js
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+console.log("✅ GEMINI SERVICE LOADED");
 
-if (!process.env.GEMINI_API_KEY) {
-    console.error("❌ GEMINI_API_KEY tidak ditemukan!");
-}
+const { GoogleGenAI } = require("@google/genai");
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Inisialisasi Google GenAI
+const ai = new GoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY,
+    // Optional: tambahkan konfigurasi lain jika diperlukan
+    // vertexai: false, // default untuk Gemini API biasa
+});
 
-module.exports = genAI;
+module.exports = ai;

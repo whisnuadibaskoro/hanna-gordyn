@@ -1,36 +1,30 @@
-console.log("AI ROUTES LOADED");
+// routes/ai.js
+console.log("✅ AI ROUTES LOADED");
 
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const ai = require("../services/gemini");
 
 // ========================
-// MULTER
+// MULTER CONFIG
 // ========================
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
         fileSize: 5 * 1024 * 1024 // 5MB
+    },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) {
+            cb(null, true);
+        } else {
+            cb(new Error("Hanya file gambar yang diizinkan (JPG, PNG, WEBP)"), false);
+        }
     }
 });
 
 // ========================
-// INISIALISASI GEMINI
-// ========================
-if (!process.env.GEMINI_API_KEY) {
-    console.error("❌ GEMINI_API_KEY tidak ditemukan di environment variables!");
-}
-
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash", // Model yang valid & cepat
-    systemInstruction: "Kamu adalah konsultan interior profesional dari Hanna Gordyn. Selalu jawab dalam bahasa Indonesia yang sopan dan mudah dipahami."
-});
-
-// ========================
-// DATA PRODUK
+// DATA PRODUK HANNA GORDYN
 // ========================
 const produkHanna = `
 1. Premium Blinds with Box
@@ -42,7 +36,7 @@ const produkHanna = `
 `;
 
 // ========================
-// ROUTES
+// HALAMAN REKOMENDASI
 // ========================
 router.get("/", (req, res) => {
     res.render("rekomendasi", {
@@ -51,62 +45,82 @@ router.get("/", (req, res) => {
     });
 });
 
+// ========================
+// ANALISIS FOTO DENGAN GEMINI
+// ========================
 router.post("/", upload.single("foto"), async (req, res) => {
     try {
         if (!req.file) {
             return res.render("rekomendasi", {
                 hasil: null,
-                error: "Silakan upload foto ruangan."
+                error: "Silakan upload foto ruangan terlebih dahulu."
             });
         }
 
         const prompt = `
+Anda adalah konsultan interior profesional dari **Hanna Gordyn**.
+
 Analisis foto ruangan ini dengan teliti.
 
-Pilih produk HANYA dari daftar berikut:
+Pilih **hanya** produk dari daftar berikut ini:
+
 ${produkHanna}
 
-Berikan analisis dalam format berikut (dalam bahasa Indonesia):
+Berikan jawaban **persis** dalam format berikut (jangan tambahkan penjelasan di luar format):
 
-1. Warna dominan ruangan
-2. Gaya interior
-3. 3 Rekomendasi produk terbaik beserta alasannya
-4. Skor kecocokan (1-100)
-5. Saran tambahan
+**Warna Dominan:** 
+**Gaya Interior:** 
+**Rekomendasi Produk:**
+1. 
+2. 
+3. 
+**Skor Kecocokan:** (/100)
+**Alasan:** 
 `;
 
-        // Generate content dengan cara yang benar
-        const result = await model.generateContent([
-            prompt,
-            {
-                inlineData: {
-                    mimeType: req.file.mimetype,
-                    data: req.file.buffer.toString("base64")
+        const response = await ai.models.generateContent({
+            model: "gemini-1.5-flash",   // Lebih stabil & cepat
+            contents: [
+                {
+                    role: "user",
+                    parts: [
+                        {
+                            inlineData: {
+                                mimeType: req.file.mimetype,
+                                data: req.file.buffer.toString("base64")
+                            }
+                        },
+                        { 
+                            text: prompt 
+                        }
+                    ]
                 }
-            }
-        ]);
+            ]
+        });
 
-        const hasil = result.response.text();
+        const hasil = response.text || "Maaf, tidak dapat menghasilkan rekomendasi saat ini.";
 
         res.render("rekomendasi", {
-            hasil: hasil,
+            hasil,
             error: null
         });
 
     } catch (err) {
-        console.error("GEMINI ERROR:", err);
+        console.error("❌ GEMINI ERROR:", err);
 
-        let errorMessage = "Terjadi kesalahan saat menganalisis gambar.";
+        let errorMsg = "Terjadi kesalahan saat menganalisis gambar.";
 
-        if (err.message.includes("API key")) {
-            errorMessage = "Masalah API Key. Silakan hubungi administrator.";
-        } else if (err.message.includes("quota")) {
-            errorMessage = "Kuota AI telah habis. Coba lagi nanti.";
+        if (err.message.includes("quota") || err.message.includes("rate")) {
+            errorMsg = "Kuota AI sedang penuh. Silakan coba beberapa menit lagi.";
+        } else if (err.message.includes("safety") || err.message.includes("blocked")) {
+            errorMsg = "Gambar tidak dapat dianalisis karena alasan keamanan.";
+        } else if (err.message.includes("invalid")) {
+            errorMsg = "Format gambar tidak didukung.";
         }
 
         res.render("rekomendasi", {
             hasil: null,
-            error: errorMessage
+            error: errorMsg
         });
     }
 });
