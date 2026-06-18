@@ -1,48 +1,151 @@
 <%- include('partials/header') %>
 
-<section class="hero">
+<section class="hero min-h-screen bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900 py-16">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+        
+        <!-- Header -->
+        <div class="mb-10">
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                AI Interior Consultant
+            </h1>
+            <p class="text-xl text-gray-300 max-w-2xl mx-auto">
+                Upload foto ruangan Anda dan dapatkan rekomendasi produk 
+                <span class="text-purple-400 font-semibold">Hanna Gordyn</span> secara cerdas.
+            </p>
+        </div>
 
-    <h1>AI Interior Consultant</h1>
+        <!-- Upload Area -->
+        <div class="bg-gray-800/70 backdrop-blur-xl border border-gray-700 rounded-3xl p-10 shadow-2xl">
+            
+            <form id="uploadForm" 
+                  action="/rekomendasi" 
+                  method="POST" 
+                  enctype="multipart/form-data">
 
-    <p>
-        Upload foto ruangan Anda dan
-        dapatkan rekomendasi produk
-        Hanna Gordyn secara otomatis.
-    </p>
+                <!-- Drag & Drop Area -->
+                <div id="dropZone" 
+                     class="border-2 border-dashed border-purple-500 hover:border-purple-400 rounded-2xl p-12 transition-all duration-300 cursor-pointer">
+                    
+                    <div class="mx-auto w-24 h-24 bg-purple-500/10 rounded-full flex items-center justify-center mb-6">
+                        <span class="text-5xl">📸</span>
+                    </div>
+                    
+                    <p class="text-2xl font-medium text-white mb-2">Upload Foto Ruangan</p>
+                    <p class="text-gray-400 mb-6">Drag & drop atau klik untuk memilih foto</p>
+                    
+                    <input type="file" 
+                           id="foto"
+                           name="foto" 
+                           accept="image/*" 
+                           required
+                           class="hidden">
 
-    <form
-        action="/rekomendasi"
-        method="POST"
-        enctype="multipart/form-data">
+                    <!-- Image Preview -->
+                    <div id="preview" class="hidden mt-6">
+                        <img id="previewImg" 
+                             class="max-h-80 mx-auto rounded-2xl shadow-lg object-contain" 
+                             alt="Preview">
+                    </div>
+                </div>
 
-        <input
-            type="file"
-            name="foto"
-            accept="image/*"
-            required>
+                <button type="submit" 
+                        id="submitBtn"
+                        class="mt-8 w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-4 px-8 rounded-2xl text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg">
+                    <span>🔍 Analisis Ruangan dengan AI</span>
+                </button>
+            </form>
+        </div>
 
-        <button type="submit">
-            Analisis Ruangan
-        </button>
+        <!-- Loading Indicator -->
+        <div id="loading" class="hidden mt-8 text-center">
+            <div class="inline-flex items-center gap-4 text-purple-400">
+                <div class="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full"></div>
+                <p class="text-lg font-medium">AI sedang menganalisis ruangan Anda...</p>
+            </div>
+        </div>
 
-    </form>
-
-    <% if(error){ %>
-        <div class="error-box">
-            <h3>Error</h3>
+        <!-- Error Message -->
+        <% if(error){ %>
+        <div class="mt-8 bg-red-900/50 border border-red-500 text-red-200 rounded-2xl p-6 text-left max-w-2xl mx-auto">
+            <h3 class="font-bold text-xl mb-2">⚠️ Terjadi Kesalahan</h3>
             <p><%= error %></p>
         </div>
-    <% } %>
+        <% } %>
 
-    <% if(hasil){ %>
-        <div class="hasil-box">
-            <h2>Hasil Analisis AI</h2>
-
-            <pre><%= hasil %></pre>
-
+        <!-- Hasil Analisis -->
+        <% if(hasil){ %>
+        <div class="mt-12 bg-gray-800/70 backdrop-blur-xl border border-gray-700 rounded-3xl p-10 text-left">
+            <h2 class="text-3xl font-bold text-white mb-6 flex items-center gap-3">
+                <span>✨</span> Hasil Rekomendasi AI
+            </h2>
+            <div class="prose prose-invert max-w-none text-gray-200 leading-relaxed text-lg">
+                <%= hasil %>
+            </div>
         </div>
-    <% } %>
+        <% } %>
 
+    </div>
 </section>
+
+<script>
+// Interactive Features
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('foto');
+const preview = document.getElementById('preview');
+const previewImg = document.getElementById('previewImg');
+const form = document.getElementById('uploadForm');
+const loading = document.getElementById('loading');
+const submitBtn = document.getElementById('submitBtn');
+
+// Drag & Drop
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('border-purple-400', 'bg-purple-500/10');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('border-purple-400', 'bg-purple-500/10');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('border-purple-400', 'bg-purple-500/10');
+    
+    if (e.dataTransfer.files.length) {
+        handleFile(e.dataTransfer.files[0]);
+    }
+});
+
+fileInput.addEventListener('change', (e) => {
+    if (e.target.files.length) {
+        handleFile(e.target.files[0]);
+    }
+});
+
+function handleFile(file) {
+    if (!file.type.startsWith('image/')) {
+        alert('Harap upload file gambar!');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        previewImg.src = e.target.result;
+        preview.classList.remove('hidden');
+    }
+    reader.readAsDataURL(file);
+}
+
+// Loading state saat submit
+form.addEventListener('submit', () => {
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = `
+        <span class="animate-pulse">Menganalisis dengan AI...</span>
+    `;
+    loading.classList.remove('hidden');
+});
+</script>
 
 <%- include('partials/footer') %>

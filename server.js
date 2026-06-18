@@ -8,6 +8,7 @@ const cors = require("cors");
 const supabase = require("./config/supabase");
 const auth = require("./middleware/auth");
 const aiRoutes = require("./routes/ai");
+
 const app = express();
 process.on("uncaughtException", (err) => {
     console.error("UNCAUGHT EXCEPTION:");
@@ -31,7 +32,8 @@ console.log("REGISTER AI ROUTE");
 MIDDLEWARE
 ================================
 */
-app.use("/views/rekomendasi", aiRoutes);
+//app.use("/views/rekomendasi", aiRoutes);
+app.use("/rekomendasi", aiRoutes);
 app.use(cors());
 
 app.use(express.urlencoded({

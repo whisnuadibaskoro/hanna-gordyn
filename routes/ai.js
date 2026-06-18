@@ -1,4 +1,4 @@
-console.log("AI ROUTE LOADED");
+console.log("AI ROUTES LOADED");
 const express = require("express");
 const router = express.Router();
 
