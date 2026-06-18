@@ -137,53 +137,28 @@ app.get("/garansi", (req, res) => {
 
 });
 
-app.post(
-    "/garansi",
-    async (req, res) => {
+app.post("/garansi", async (req, res) => {
 
-        const receipt_number =
-        req.body.receipt_number;
+    const receipt_number = req.body.receipt_number;
 
-        const {
-            data,
-            error
-        }
+    const { data, error } = await supabase
+        
+    .from("warranty")
+    .select("*")
+    .eq("receipt_number", receipt_number)
+    .single();
 
-        =
+    if (error) {
+        return res.render("garansi", {
+            data: null,
+            error: "Nomor Resi Tidak Ditemukan"
+        });
+    }
 
-        await supabase
-
-        .from("warranty")
-
-        .select("*")
-
-        .eq(
-            "receipt_number",
-            receipt_number
-        )
-
-        .single();
-
-        if(error){
-
-            return res.render(
-                "garansi",
-                {
-                    data:null,
-                    error:
-                    "Nomor Resi Tidak Ditemukan"
-                }
-            );
-
-        }
-
-        res.render(
-            "garansi",
-            {
-                data,
-                error:null
-            }
-        );
+    res.render("garansi", {
+        data,
+        error: null
+    });
 
 });
 app.use("/rekomendasi", aiRoutes);
@@ -420,7 +395,7 @@ PORT,
 
 console.log(
 
-"Server berjalan di : "
+    "Server berjalan di : "
 
 +
 

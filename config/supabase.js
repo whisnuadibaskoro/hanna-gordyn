@@ -1,13 +1,18 @@
 const { createClient } =
 require("@supabase/supabase-js");
 
-const supabase =
-createClient(
+if (
+    !process.env.SUPABASE_URL ||
+    !process.env.SUPABASE_KEY
+) {
+    throw new Error(
+        "SUPABASE_URL atau SUPABASE_KEY belum diatur"
+    );
+}
 
-process.env.SUPABASE_URL,
-
-process.env.SUPABASE_KEY
-
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_KEY
 );
 
 module.exports = supabase;
