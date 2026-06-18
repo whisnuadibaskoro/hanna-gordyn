@@ -1,7 +1,10 @@
-const { GoogleGenAI } = require("@google/genai");
+// services/gemini.js
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
-});
+if (!process.env.GEMINI_API_KEY) {
+    console.error("❌ GEMINI_API_KEY tidak ditemukan!");
+}
 
-module.exports = ai;
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+module.exports = genAI;
