@@ -25,13 +25,13 @@ console.log("SESSION_SECRET:", !!process.env.SESSION_SECRET);
 console.log("ADMIN_USERNAME:", !!process.env.ADMIN_USERNAME);
 console.log("ADMIN_PASSWORD:", !!process.env.ADMIN_PASSWORD);
 console.log("GEMINI_API_KEY:", !!process.env.GEMINI_API_KEY);
-
+console.log("REGISTER AI ROUTE");
 /*
 ================================
 MIDDLEWARE
 ================================
 */
-
+app.use("/views/rekomendasi", aiRoutes);
 app.use(cors());
 
 app.use(express.urlencoded({
@@ -177,7 +177,7 @@ app.post("/garansi", async (req, res) => {
     });
 
 });
-app.use("/rekomendasi", aiRoutes);
+
 
 /*
 ================================

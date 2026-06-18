@@ -1,15 +1,51 @@
+console.log("AI ROUTE LOADED");
 const express = require("express");
 const router = express.Router();
 
 const multer = require("multer");
 const ai = require("../services/gemini");
 
+// ========================
+// MULTER
+// ========================
+
 const upload = multer({
     storage: multer.memoryStorage(),
     limits: {
-        fileSize: 5 * 1024 * 1024 // 5MB
+        fileSize: 5 * 1024 * 1024
     }
 });
+
+// ========================
+// DATA PRODUK
+// ========================
+
+const produkHanna = `
+1. Premium Blinds with Box
+2. Premium Regular
+3. Premium Vitrase
+4. Premium Roller Blind
+5. Premium Venetian Blind
+6. Premium Vertical Blind
+`;
+
+// ========================
+// HALAMAN
+// ========================
+
+router.get("/", (req, res) => {
+
+    res.render("rekomendasi", {
+        hasil: null,
+        error: null
+    });
+
+});
+
+// ========================
+// ANALISIS
+// ========================
+
 router.post(
     "/",
     upload.single("foto"),
@@ -18,44 +54,89 @@ router.post(
         try {
 
             if (!req.file) {
-                return res.render("rekomendasi", {
-                    hasil: null,
-                    error: "Silakan upload foto terlebih dahulu."
-                });
+
+                return res.render(
+                    "rekomendasi",
+                    {
+                        hasil: null,
+                        error: "Silakan upload foto."
+                    }
+                );
+
             }
 
-            const prompt = `...`;
+            const prompt = `
+Anda adalah konsultan interior Hanna Gordyn.
 
-            const response = await ai.models.generateContent({
-                model: "gemini-2.5-flash",
-                contents: [
-                    {
-                        inlineData: {
-                            mimeType: req.file.mimetype,
-                            data: req.file.buffer.toString("base64")
+Analisis foto ruangan berikut.
+
+Pilih produk hanya dari daftar berikut:
+
+${produkHanna}
+
+Berikan:
+
+1. Warna dominan
+2. Gaya interior
+3. 3 rekomendasi produk
+4. Skor kecocokan
+5. Alasan
+`;
+
+            const response =
+                await ai.models.generateContent({
+
+                    model: "gemini-2.5-flash",
+
+                    contents: [
+                        {
+                            role: "user",
+                            parts: [
+                                {
+                                    inlineData: {
+                                        mimeType:
+                                        req.file.mimetype,
+                                        data:
+                                        req.file.buffer.toString("base64")
+                                    }
+                                },
+                                {
+                                    text: prompt
+                                }
+                            ]
                         }
-                    },
-                    {
-                        text: prompt
-                    }
-                ]
-            });
+                    ]
 
-            const hasil = response.text;
+                });
 
-            res.render("rekomendasi", {
-                hasil,
-                error: null
-            });
+            const hasil =
+                response.text ||
+                "Tidak ada hasil.";
 
-        } catch (err) {
+            res.render(
+                "rekomendasi",
+                {
+                    hasil,
+                    error: null
+                }
+            );
 
-            console.error("GEMINI ERROR:", err);
+        }
 
-            res.render("rekomendasi", {
-                hasil: null,
-                error: err.message
-            });
+        catch (err) {
+
+            console.error(
+                "GEMINI ERROR:",
+                err
+            );
+
+            res.render(
+                "rekomendasi",
+                {
+                    hasil: null,
+                    error: err.message
+                }
+            );
 
         }
 
