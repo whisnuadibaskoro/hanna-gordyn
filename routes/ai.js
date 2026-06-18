@@ -1,25 +1,31 @@
 console.log("AI ROUTES LOADED");
+
 const express = require("express");
 const router = express.Router();
-
 const multer = require("multer");
-const ai = require("../services/gemini");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ========================
 // MULTER
 // ========================
-
 const upload = multer({
     storage: multer.memoryStorage(),
-    limits: {
-        fileSize: 5 * 1024 * 1024
-    }
+    limits: { fileSize: 5 * 1024 * 1024 }
+});
+
+// ========================
+// INISIALISASI GEMINI
+// ========================
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash",   // Model yang valid
+    systemInstruction: "Kamu adalah konsultan interior profesional untuk Hanna Gordyn."
 });
 
 // ========================
 // DATA PRODUK
 // ========================
-
 const produkHanna = `
 1. Premium Blinds with Box
 2. Premium Regular
@@ -30,117 +36,56 @@ const produkHanna = `
 `;
 
 // ========================
-// HALAMAN
+// ROUTES
 // ========================
-
 router.get("/", (req, res) => {
-
-    res.render("rekomendasi", {
-        hasil: null,
-        error: null
-    });
-
+    res.render("rekomendasi", { hasil: null, error: null });
 });
 
-// ========================
-// ANALISIS
-// ========================
+router.post("/", upload.single("foto"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.render("rekomendasi", {
+                hasil: null,
+                error: "Silakan upload foto ruangan."
+            });
+        }
 
-router.post(
-    "/",
-    upload.single("foto"),
-    async (req, res) => {
+        const prompt = `
+Analisis foto ruangan berikut dan berikan rekomendasi produk Hanna Gordyn.
 
-        try {
-
-            if (!req.file) {
-
-                return res.render(
-                    "rekomendasi",
-                    {
-                        hasil: null,
-                        error: "Silakan upload foto."
-                    }
-                );
-
-            }
-
-            const prompt = `
-Anda adalah konsultan interior Hanna Gordyn.
-
-Analisis foto ruangan berikut.
-
-Pilih produk hanya dari daftar berikut:
-
+Pilih produk HANYA dari daftar ini:
 ${produkHanna}
 
-Berikan:
-
-1. Warna dominan
+Jawab dengan format yang rapi dan mudah dibaca:
+1. Warna dominan ruangan
 2. Gaya interior
-3. 3 rekomendasi produk
-4. Skor kecocokan
-5. Alasan
+3. 3 Rekomendasi produk terbaik
+4. Skor kecocokan (1-100)
+5. Alasan pemilihan
 `;
 
-            const response =
-                await ai.models.generateContent({
-
-                    model: "gemini-2.5-flash",
-
-                    contents: [
-                        {
-                            role: "user",
-                            parts: [
-                                {
-                                    inlineData: {
-                                        mimeType:
-                                        req.file.mimetype,
-                                        data:
-                                        req.file.buffer.toString("base64")
-                                    }
-                                },
-                                {
-                                    text: prompt
-                                }
-                            ]
-                        }
-                    ]
-
-                });
-
-            const hasil =
-                response.text ||
-                "Tidak ada hasil.";
-
-            res.render(
-                "rekomendasi",
-                {
-                    hasil,
-                    error: null
+        const result = await model.generateContent([
+            prompt,
+            {
+                inlineData: {
+                    data: req.file.buffer.toString("base64"),
+                    mimeType: req.file.mimetype
                 }
-            );
+            }
+        ]);
 
-        }
+        const hasil = result.response.text();
 
-        catch (err) {
+        res.render("rekomendasi", { hasil, error: null });
 
-            console.error(
-                "GEMINI ERROR:",
-                err
-            );
-
-            res.render(
-                "rekomendasi",
-                {
-                    hasil: null,
-                    error: err.message
-                }
-            );
-
-        }
-
+    } catch (err) {
+        console.error("GEMINI ERROR:", err);
+        res.render("rekomendasi", {
+            hasil: null,
+            error: err.message || "Terjadi kesalahan saat menganalisis gambar."
+        });
     }
-);
+});
 
 module.exports = router;
