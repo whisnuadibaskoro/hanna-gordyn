@@ -21,11 +21,27 @@
             accept="image/*"
             required>
 
-        <button>
+        <button type="submit">
             Analisis Ruangan
         </button>
 
     </form>
+
+    <% if(error){ %>
+        <div class="error-box">
+            <h3>Error</h3>
+            <p><%= error %></p>
+        </div>
+    <% } %>
+
+    <% if(hasil){ %>
+        <div class="hasil-box">
+            <h2>Hasil Analisis AI</h2>
+
+            <pre><%= hasil %></pre>
+
+        </div>
+    <% } %>
 
 </section>
 

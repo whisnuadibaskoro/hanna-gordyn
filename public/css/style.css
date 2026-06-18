@@ -1295,4 +1295,25 @@ footer p {
     color: rgba(255, 255, 255, 0.5);
   }
 }
+.hasil-box{
+    margin-top:30px;
+    padding:20px;
+    background:#1e1e1e;
+    border-radius:12px;
+    color:white;
+    text-align:left;
+}
+
+.error-box{
+    margin-top:20px;
+    padding:15px;
+    background:#a30000;
+    border-radius:10px;
+    color:white;
+}
+
+pre{
+    white-space:pre-wrap;
+    word-wrap:break-word;
+}
 /* ======================================== END CSS ======================================== */

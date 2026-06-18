@@ -186,6 +186,7 @@ app.post(
         );
 
 });
+app.use("/rekomendasi", aiRoutes);
 
 /*
 ================================
@@ -560,5 +561,3 @@ data
 );
 
 });
-
-app.use("/rekomendasi", aiRoutes);
