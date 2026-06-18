@@ -7,7 +7,7 @@ const cors = require("cors");
 
 const supabase = require("./config/supabase");
 const auth = require("./middleware/auth");
-
+const aiRoutes = require("./routes/ai");
 const app = express();
 
 /*
@@ -560,3 +560,5 @@ data
 );
 
 });
+
+app.use("/rekomendasi", aiRoutes);

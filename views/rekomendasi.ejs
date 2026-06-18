@@ -1,0 +1,32 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+
+    <h1>AI Interior Consultant</h1>
+
+    <p>
+        Upload foto ruangan Anda dan
+        dapatkan rekomendasi produk
+        Hanna Gordyn secara otomatis.
+    </p>
+
+    <form
+        action="/rekomendasi"
+        method="POST"
+        enctype="multipart/form-data">
+
+        <input
+            type="file"
+            name="foto"
+            accept="image/*"
+            required>
+
+        <button>
+            Analisis Ruangan
+        </button>
+
+    </form>
+
+</section>
+
+<%- include('partials/footer') %>
