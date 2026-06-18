@@ -9,6 +9,22 @@ const supabase = require("./config/supabase");
 const auth = require("./middleware/auth");
 const aiRoutes = require("./routes/ai");
 const app = express();
+process.on("uncaughtException", (err) => {
+    console.error("UNCAUGHT EXCEPTION:");
+    console.error(err);
+});
+
+process.on("unhandledRejection", (reason) => {
+    console.error("UNHANDLED REJECTION:");
+    console.error(reason);
+});
+
+console.log("SUPABASE_URL:", !!process.env.SUPABASE_URL);
+console.log("SUPABASE_KEY:", !!process.env.SUPABASE_KEY);
+console.log("SESSION_SECRET:", !!process.env.SESSION_SECRET);
+console.log("ADMIN_USERNAME:", !!process.env.ADMIN_USERNAME);
+console.log("ADMIN_PASSWORD:", !!process.env.ADMIN_PASSWORD);
+console.log("GEMINI_API_KEY:", !!process.env.GEMINI_API_KEY);
 
 /*
 ================================
